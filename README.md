@@ -19,9 +19,9 @@ df1 = pd.DataFrame({
 
 ## Describe a dataset 
 ```python 
-$1.describe(include = "all")
-$1.info()
-$1.memory_user(deep = True)
+ds.describe(include = "all")
+ds.info()
+ds.memory_user(deep = True)
 ```
 
 ## Types
