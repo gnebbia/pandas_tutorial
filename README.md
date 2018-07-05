@@ -53,12 +53,12 @@ ds.field.quantile([0.1,0.15, .9])
 
 ### Reading a CSV File
 ```python 
-ds = pd.read_csv($2, sep=None, engine='python', parse_dates=['fcast_date','timestamp'], dtype={'user_id': "category", 'stringa':'object'})
+ds = pd.read_csv(filename, sep=None, engine='python', parse_dates=['fcast_date','timestamp'], dtype={'user_id': "category", 'stringa':'object'})
 ```
 
 ### Writing to a CSV File
 ```python 
-ds.to_csv($2, index = False)
+ds.to_csv(filename, index = False)
 ```
 
 ## Selecting Data
