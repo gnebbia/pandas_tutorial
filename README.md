@@ -1,8 +1,8 @@
 # Pandas Tutorial
 
 In pandas we have two datastructure:
-    *Series (which can be thought as an array)
-    *DataFrame (which can be thought as a matrix)
+    *Series (which can be thought as an array or as pandas 1D data structure)
+    *DataFrame (which can be thought as a matrix or as pandas 2D data structure)
 
 A DataFrame can be also viewed as an array of Series,
 dataframes and series are flexible, and can contain labels for fields,
@@ -63,7 +63,17 @@ ds.to_csv(filename, index = False)
 
 ## Selecting Data
 
-### Selecting with Labels
+In pandas we generally select data through the use of two methods:
+
+* loc, which selects by label
+* iloc, which selects by an index number
+
+We may also avoid the usage of these methods and let pandas infer if
+we are selecting by label or by an index integer number, but this is
+not adviced, it is always better to be specific to not make the code look
+ambiguous.
+
+### Selecting with Labels (i.e., loc)
 
 In order to select by labels we use the loc method:
 ```python 
@@ -80,13 +90,17 @@ ds.loc[:, ['column1','column2']]
 ds.loc[0:4, 'column1':'column2']
 ```
 
+```python
+df.loc[:, df.columns.str.startswith('foo')]
+```
+
 ### Selecting and changing a specific value
 If we want to modify the value in column 'b' which is on the first row we can do:
 ```python
 df.loc[1, 'b'] = 'XXXXXX'
  ```
 
-### Selecting with Numbers
+### Selecting with Numbers (i.e., iloc)
 We can use iloc if we want to select data referring to numbers for
 columns like:
 
@@ -304,11 +318,60 @@ ds.drop_duplicates(subset = ['age', 'zip_code'])
 
 ## Sorting Values 
 
+We can sort by a specific column by doing:
 ```python 
 ds.sort_values(['column_1'], ascending=False)
 ```
 
+We can also sort using multiple columns by doing:
+```python
+dfworking = dfworking.sort_values(['STATE','DISTRICT','GENERAL VOTE'], ascending=[True, True, False])
+```
+
+We can also take the top values for a specific dataframe with *nlargest*:
+```python
+df.nlargest(3, 'column_name')
+```
+
+Or the lowest values with:
+
+```python
+df.nsmallest(3, 'column_name')
+```
+
 ## Grouping Values
+Let's say we have a dataset which tells us various characteristics for neighbourhoods
+for different cities, let's say now we want to understand things related to cities,
+a way to do this is to use groupby.
+By using groupby we can imagine, that we are splitting our dataframe in multiple smaller
+dataframes, each related to a specific thing.
+For example taking our city and neighbourhoods dataframe, a groupby on the column 'city',
+would produce different dataframes, each one containing only rows related to a specific city.
+
+### Printing a groupby dataframe
+```python
+g = df.groupby('city')
+
+for city, city_df in g:
+    print(city)
+    print(city_df)
+
+```
+An alternative way could be:
+
+```python
+g.get_group("Napoli")
+```
+
+With the last command meaning "print only the sub dataframe related to the city Napoli".
+
+A groupby basically implements a sequence of the following operations:
+
+* split, splits the original DataFrame in sub DataFrames
+* apply, applies an operation, we can ask for max(), min(), mean() and whatever other function
+* combine, again in a new Series or DataFrame
+
+
 ```python 
 ds.groupby('column_name').column2.mean()
 ```
@@ -320,6 +383,16 @@ ds.groupby('column_name').column2.max()
 ```python 
 ds.groupby('continent').mean()
 ```
+
+```python
+ds.groupby('city').describe()
+```
+
+We can also plot data for each different city for example:
+```python
+ds.groupbby('city').plot()
+```
+
 
 ## Map, Apply and ApplyMap
 Map applies a translation to each element of a series:
