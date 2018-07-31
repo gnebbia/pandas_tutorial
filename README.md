@@ -272,6 +272,7 @@ df.column_name_cat.sort_values(ascending = False)
 
 
 ### Create Dummy Columns for One-Hot Encoding
+
 ```python 
 one_hot_cols = pd.get_dummies(ds['outcome'], prefix='outcome')
 ds.drop('outcome', axis=1, inplace = True)
@@ -294,6 +295,18 @@ ds['newcol'] = pd.cut(ds['age'], bins=[0, 18, 35, 70])
 ```
 notice that the intervals are inclusive, so the first one will go from 0 to 18 included, while
 the second one will go from 18 excluded to 35 included and so on.
+
+Other ways to discretize features are using numpy with:
+
+```python
+discretized_age = np.digitize(age, bins=[20,30,64])
+```
+
+In this last case if we have a series called age which is made like this:
+`6, 12, 20, 36, 65`, after the operation, digitized_age will be like this:
+`0, 0, 1, 1, 1`.
+
+So the bin numbers are exclusive.
 
 
 ### Create a Dataframe as a combination of two dataframes with different columns
@@ -1087,6 +1100,47 @@ data['time'] = pd.to_datetime(data['time'], format = "%Y%m%d %I:%M %p")
 # data['time'] = pd.to_datetime(data['time'])
 data.set_index('time', inplace=True)
 ```
+
+### Time Series Aggregation
+
+Let's say we want to aggregate our time series by hour, or by minute, or by day,
+we can do it using the `resample` method.
+
+Let's say we just have a bunch of timestamps, which do not have a specific 
+structure, like by minute, or by hour and so on.
+For example they could represent the access times made to a web page,
+so we basically have timestamps without any other information.
+
+Like this:
+
+```
+2007-05-05 18:51:37
+2007-05-05 18:54:02
+2007-05-05 19:59:11
+2007-05-05 19:59:11
+2007-05-05 19:59:11
+2007-05-06 22:33:18
+2007-10-26 08:17:42
+```
+
+We can transform this data to a timeseries with a specific resolution in this
+way:
+
+```python
+# we first set a 1 to each timestamp, which is useful for the aggregation
+# into a time series
+ds['count'] = 1 
+
+# these are some examples of possible aggregations
+ds_minute = ds.resample('T').sum() # minute
+ds_15minute = ds.resample('15T').sum() # 15 minutes
+ds_hour = ds.resample('H').sum() # hour
+ds_day = ds.resample('D').sum() # day
+ds_week = ds.resample('W').sum() # week
+ds_month = ds.resample('M').sum() # month
+ds_year = ds.resample('A').sum() # year
+```
+
 
 ### Time Series Common Tasks: Getting the Day of the Week
 
