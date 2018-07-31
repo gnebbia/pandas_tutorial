@@ -63,8 +63,18 @@ ds.field.quantile([0.1,0.15, .9])
 ## Manipulating CSV Files
 
 ### Reading a CSV File
-```python 
+
+We can read a csv file in this way:
+
+```python
 ds = pd.read_csv(filename, sep=None, engine='python', parse_dates=['fcast_date','timestamp'], dtype={'user_id': "category", 'stringa':'object'})
+```
+
+Let's see another example:
+
+```python
+# In this case we are also setting an index column
+ds = pd.read_csv("reuters_random_sample.csv", parse_dates=['time', 'published_time'],  index_col='time')
 ```
 
 #### Reading an XLS(X) file
@@ -74,7 +84,11 @@ energy = pd.read_excel("Energy Indicators.xls")
 ```
 
 ### Writing to a CSV File
-```python 
+
+Let's see how to save our dataframe to a new csv file:
+
+```python
+# In this case we do not want to save the index to the file
 ds.to_csv(filename, index = False)
 ```
 
