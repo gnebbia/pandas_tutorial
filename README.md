@@ -309,9 +309,16 @@ ds = pd.concat([df_even, df_odd], axis=1)
 ds["ifp_id"].unique()
 ```
 
+### Deleteing Rows which have missing values
+
+```python
+df.dropna()
+```
+
 ### Split a Dataset into Train/Test 
 
-```python 
+
+```python
 train = dataset.sample(frac=0.95,random_state=200)
 test = dataset.drop(train.index)
 ```
@@ -356,12 +363,13 @@ result = pd.concat(frames, ignore_index = True)
 We can combine dataset by using merge, as in database theory we must understand
 what it means to do:
 
-*   Outer Join (Union), we take everything
-*   Inner Join (Intersection), we take only things which are in both sets (i.e., dataframes)
-*   Conditional Joins (Left and Right Joins)
+*   Outer Join (Union), we take everything, this is the equivalent of a union
+*   Inner Join (Intersection), we take only things which are in both sets
+    (i.e., dataframes) this is the equivalent of an intersection
+*   Conditional Joins (Left and Right Joins), this is the equivalent of an
+    intersection with a union with one of the sets, or dataframes
 
 By default pandas performs inner joins.
-
 
 
 ### Outer Join
