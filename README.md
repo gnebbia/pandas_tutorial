@@ -1157,6 +1157,29 @@ del ds_week['day_of_week']
 del ds_weekend['day_of_week']
 ```
 
+### Time Series Common Tasks: Filtering a time series with dates
+
+We can filter a time seris in this way:
+```python
+date_mask = (ds.index >= "2010-05-01") & (ds.index < "2010-07-01")
+ds[date_mask]
+```
+
+Now we are saying take all the days starting from the first of may, 
+(this is included) until the last day of june.
+
+I think there is no difference in terms of dates between > and >=.
+
+We can filter data by dates like in multiple ways, let's see another example:
+```python
+# We pick all the data points from the beginning of 2015 to the end of 2016
+date_mask = (ds_utc.index >= "2015-01-01") & (ds_utc.index < "2017-01-01")
+
+# Now we take from 2012 to 2014
+ds_utc_2y = ds_utc[date_mask]
+```
+
+
 ### Time Series Common Tasks: Converting time in different units
 
 If we want to have the difference in hours between to pandas datetimes we can
@@ -1167,19 +1190,6 @@ ds['difference_in_hours'] = (ds['published_time'] - ds.index).astype('timedelta6
 ```
 
 
-### Filter by Date
-
-We can filter data by dates like in multiple ways, one way is:
-```python
-# We pick all the data points from the beginning of 2015 to the end of 2016
-date_mask = (ds_utc.index >= "2015-01-01") & (ds_utc.index < "2017-01-01")
-
-# Now we take from 2012 to 2014
-ds_utc_2y = ds_utc[date_mask]
-```
-
-
-
 ## Appendix A: Pandas Options
 
 Change the maximum number of printable rows:
@@ -1187,6 +1197,5 @@ Change the maximum number of printable rows:
 pd.set_option('display.height', 500)
 pd.set_option('display.max_rows', 500)
 ```
-
 
 
