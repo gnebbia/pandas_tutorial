@@ -211,8 +211,21 @@ column by just doing:
 ```python
 ds['diff'] = ds['time_in_sec'] - ds['time_in_sec'].shift(1)
 ```
+
 of course the first element will be a NaN, which we have to deal with,
 since it has no corresponding element to perform the subtraction in this case.
+
+Another common usage of the shift function is when we want to create a dataset
+which can be used with an AR model or in general with time series.
+
+This can be done for example like this:
+
+```python
+def create_sequence_ds(ds, colname_to_shift, num_steps_backward):
+        for i in range(num_steps_backward):
+            ds['shift_'+str(i)] = ds[colname_to_shift].shift(i+1)
+        return ds
+```
 
 
 ### Inspect Column Values
@@ -1048,9 +1061,33 @@ logs, at this point we could also strip those characters.
 We can also defer the parsing and setting of a time/date field by doing:
 ```python
 data['time'] = pd.to_datetime(data['time'], format = "%Y%m%d %I:%M %p")
-#sometimes the format can be auto inferred by pandas
-#data['time'] = pd.to_datetime(data['time'])
+# sometimes the format can be auto inferred by pandas
+# data['time'] = pd.to_datetime(data['time'])
 data.set_index('time', inplace=True)
+```
+
+### Time Series Common Tasks: Getting the Day of the Week
+
+Sometimes it can be useful to get the weekdays to be able to divide our dataset
+into working week days and weekend days. This can be easily achieved with:
+
+```python
+series['day_of_week'] = series.index.weekday_name
+ds_week = series[~series['day_of_week'].isin(['Saturday','Sunday'])]
+ds_weekend = series[series['day_of_week'].isin(['Saturday','Sunday'])]
+# Now we can remove the fields of the name if we don't need them
+del series['day_of_week']
+del ds_week['day_of_week']
+del ds_weekend['day_of_week']
+```
+
+### Time Series Common Tasks: Converting time in different units
+
+If we want to have the difference in hours between to pandas datetimes we can
+do:
+
+```python
+ds['difference_in_hours'] = (ds['published_time'] - ds.index).astype('timedelta64[h]')
 ```
 
 
