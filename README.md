@@ -66,9 +66,12 @@ ds.field.quantile([0.1,0.15, .9])
 
 We can read a csv file in this way:
 
+
 ```python
 ds = pd.read_csv(filename, sep=None, engine='python', parse_dates=['fcast_date','timestamp'], dtype={'user_id': "category", 'stringa':'object'})
 ```
+
+Basically we set engine to python anytime we deal with regexes.
 
 Let's see another example:
 
@@ -76,6 +79,53 @@ Let's see another example:
 # In this case we are also setting an index column
 ds = pd.read_csv("reuters_random_sample.csv", parse_dates=['time', 'published_time'],  index_col='time')
 ```
+
+let's see another example:
+
+```python
+# in this case we skip the initial space we have in fields, this is very useful
+# since many times we have csv files where fields are separated by a space other
+# than commas to increase readability
+ds = pd.read_csv("reuters_random_sample.csv", parse_dates=['time', 'published_time'],  index_col='time', skipinitialspace = True)
+```
+
+Let's see another example where we want to exclude some columns or change the
+order of the existing columns:
+
+```python
+# in this case we read the cols but then switch the order in our dataframe
+ds = pd.read_csv(data, usecols=['foo', 'bar'], skipinitialspace=True)[['bar', 'foo']]
+```
+
+we can also refer to columns numerically, for example:
+
+```python
+ds = pd.read_csv(data, usecols=[0,1])
+```
+
+Let's see another example, in this case we have fields separated by a bunch of
+spaces, but still spaces can appear in some of the fields because there are
+strings, for example:
+
+1 "a string exampel" 12:32 "awdaw ddwd wa da  "
+2 "a string exampel, dwao9*(0323" 12:35 "a a  awdaw ddwd, wa,, da  "
+
+In this case we can read the file, by denoting the quoting char, so inside
+quoting chars the separator can apper and will not cause any problems
+
+```python
+ds = pd.read_csv("data.csv", sep='\s+', engine='python', quotechar='"')
+```
+
+Another example could be when we have multiple separators, at this point we can
+try with:
+
+```python
+# In this case we consider both ; and , as separators
+df = pd.read_csv("file.csv", sep="[;,]", engine='python')
+```
+
+
 
 #### Reading an XLS(X) file
 
