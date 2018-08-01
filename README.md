@@ -125,6 +125,9 @@ try with:
 df = pd.read_csv("file.csv", sep="[;,]", engine='python')
 ```
 
+```python
+ds = pd.read_csv("original_datasets/newaa", engine='python', quotechar='!', header=None, names=['time','offset','title','link'], index_col='time')
+```
 
 
 #### Reading an XLS(X) file
