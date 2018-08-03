@@ -1,8 +1,8 @@
 # Pandas Tutorial
 
 In pandas we have two datastructure:
-    *Series (which can be thought as an array or as pandas 1D data structure)
-    *DataFrame (which can be thought as a matrix or as pandas 2D data structure)
+    * Series (which can be thought as an array or as pandas 1D data structure)
+    * DataFrame (which can be thought as a matrix or as pandas 2D data structure)
 
 A DataFrame can be also viewed as an array of Series,
 dataframes and series are flexible, and can contain labels for fields,
@@ -187,20 +187,23 @@ df.loc['2016-01-11', ['column1', 'column2']]
 ```
 
 ### Selecting and changing a specific value
+
 If we want to modify the value in column 'b' which is on the first row we can do:
+
 ```python
 df.loc[1, 'b'] = 'XXXXXX'
- ```
+```
 
 ### Selecting with Numbers (i.e., iloc)
 We can use iloc if we want to select data referring to numbers for
 columns like:
 
-```python 
+```python
 ds.iloc[:, 0:4]
 ```
 
 We can also combine iloc and loc with:
+
 ```python
 army.loc['Arizona'].iloc[2]
 ```
@@ -218,17 +221,18 @@ df.ix[max_index]
 ```
 
 ## Filters
-```python 
+
+```python
 ds[(ds.column1 >= 200) & (ds.column2 == 'Drama')]
 ```
 
 ## Pandas Conditionals
 
-```python 
+```python
 df.loc[df.AAA >= 5,['BBB','CCC']] = 555;
 ```
 
-```python pd_if_else
+```python
 df['logic'] = np.where(df['AAA'] > 5,'high','low'); df
 ```
 
