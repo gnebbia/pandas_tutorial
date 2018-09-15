@@ -1,4 +1,4 @@
-# Pandas Tutorial
+e Pandas Tutorial
 
 In pandas we have two datastructure:
 
@@ -910,7 +910,7 @@ plt.axvline(females['Height'].mean(), color='red', linewidth=2)
 #### Plotting the Cumulative Distribution
 We can plot the cumulative distribution of a column, like this:
 
-```
+```python
 df.column1.plot(kind='hist',
         bins=100,
         title='Cumulative distributions',
@@ -918,6 +918,7 @@ df.column1.plot(kind='hist',
         cumulative=True,
         alpha=0.4)
 ```
+
 
 ### Plotting an estimate of the Probability Density Function
 
@@ -1256,5 +1257,23 @@ Change the maximum number of printable rows:
 pd.set_option('display.height', 500)
 pd.set_option('display.max_rows', 500)
 ```
+## Appendix B: Other Tricks
+
+### Getting the maximum among more columns
+
+To create an additional column which is the maximum among different columns we
+can simply do:
+```python
+dss['top_topic_value'] = dss[['topic_0','topic_1','topic_2']].max(axis=1)
+```
+
+Anyway what if we need to get the column name which has the maximum value?
+In this case we can simply use the `idxmax` method, like this: 
+
+```python
+dss['top_topic'] = dss[['topic_0','topic_1','topic_2']].idxmax(axis=1)
+```
+
+
 
 
