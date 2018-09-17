@@ -1,4 +1,4 @@
-e Pandas Tutorial
+# Pandas Tutorial
 
 In pandas we have two datastructure:
 
@@ -265,6 +265,7 @@ ds["days_from_start"] = ds["fcast_date_a"] - ds["date_start"]
 ```
 
 ### Create new Columns with Apply
+
 ```python 
 def compute_euclidean_distance(row):
 	a = np.array([row['value_a'], row['value_b'], row['value_c']])
@@ -769,6 +770,7 @@ def majority(row):
 df['legal_drinker'] = df.age.apply(majority)
 ```
 an alternative way to implement it is:
+
 ```python
 def majority(row):
     if row['age'] > 17:
@@ -779,6 +781,7 @@ def majority(row):
     
 df.apply(majority, axis =1)
 ```
+
 so keep in mind that if we consider the fields of the rows specifically, we have
 to add the field *axis = 1* to apply.
 
