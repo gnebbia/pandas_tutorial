@@ -1126,6 +1126,47 @@ bar_plot.set_xlabel("x label")
 bar_plot.set_ylabel("y label")
 ```
 
+### Other Plotting Utilities
+
+We can instantiate a new plot with a title by doing:
+```python
+import matplotlib.pyplot as plt
+
+plt.figure("title of the figure")
+# This states, create a plot with 3 figures, and position
+# them vertically
+# the general structure is subplot(nrows, ncols, index)
+
+# here we will position the figure in the structure 3,1
+# at index 1
+plt.subplot(311)
+# To set a scale on y axis we can use
+plt.ylim([0,350])
+ds0.plot()
+
+# here we will position the figure in the structure 3,2
+# at index 2
+# To set a scale on y axis we can use
+plt.ylim([0,350])
+plt.subplot(312)
+ds1.plot()
+
+# here we will position the figure in the structure 3,3
+# at index 3
+# To set a scale on y axis we can use
+plt.ylim([0,350])
+plt.subplot(313)
+ds2.plot() 
+
+```
+
+We can also choose a stylesheet, for example we can have the same style of
+the infamous ggplot package in R with:
+```python
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
+```
+
 
 ## Correlation with Pandas
 
@@ -1203,6 +1244,22 @@ ds_week = ds.resample('W').sum() # week
 ds_month = ds.resample('M').sum() # month
 ds_year = ds.resample('A').sum() # year
 ```
+
+### Time Series Common Tasks: Converting Date Format
+
+
+#### From Unix Time to Human Readable Date
+
+```python
+df['date'] = pd.to_datetime(df['date'],unit='s')
+```
+
+In order to convert to Unix Time a Human Readable date, we can do:
+
+```python
+ds['time'] = (ds['time'].astype(np.int64)/1e9).astype(np.int64)
+```
+
 
 
 ### Time Series Common Tasks: Getting the Day of the Week
