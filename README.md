@@ -20,6 +20,8 @@ df1 = pd.DataFrame({
 ```
 
 ## Describe a Dataset 
+
+
 ```python 
 ds.describe(include = "all")
 ds.info()
@@ -38,12 +40,15 @@ print(ds.to_string())
 ```
 
 ## Types
+
 We can view and inspect types of a dataframe with:
+
 ```python 
 ds.dtypes
 ```
 
 In order to change a column to a categoric type we can do:
+
 ```python 
 ds['column_name'] = ds['column_name'].astype('category', categories=['good', 'very good', 'excellent'])
 ```
@@ -62,12 +67,17 @@ ds.field_name.median()
 ds.field.quantile([0.1,0.15, .9])
 ```
 
+We can plot more percentiles with the commodity of list comprehensions:
+```python 
+quantiles_lst =  [x * 0.01 for x in range(0, 101)]
+ds.field.quantile(quantiles_lst)
+```
+
 ## Manipulating CSV Files
 
 ### Reading a CSV File
 
 We can read a csv file in this way:
-
 
 ```python
 ds = pd.read_csv(filename, sep=None, engine='python', parse_dates=['fcast_date','timestamp'], dtype={'user_id': "category", 'stringa':'object'})
@@ -260,6 +270,7 @@ ds.rename(columns={'fcast_date_a': 'date_fcast'}, inplace=True)
 ```
 
 ### Create new Columns
+
 ```python 
 ds["days_from_start"] = ds["fcast_date_a"] - ds["date_start"]
 ```
@@ -399,7 +410,7 @@ test = dataset.drop(train.index)
 ### Select Rows based on Condition
 
 ```python
-ds[ds['colname1'] == 'value']]
+ds[ds['colname1'] == 'value']
 
 # Let's select all the rows which have as value
 # in colnam2 the string America or Europe
@@ -1174,6 +1185,16 @@ We can compute the pearson correlation index between two columns with:
 ```python
 Top15['column1'].corr(Top15['column2'])
 ```
+By default pandas compute the Pearson correlation, but we can compute
+other kinds of correlation indexes by specifying other options, such as:
+
+```python
+Top15['column1'].corr(method='spearman', Top15['column2'])
+Top15['column1'].corr(method='kendall', Top15['column2'])
+# This happens by default
+Top15['column1'].corr(method='pearson', Top15['column2'])
+
+```
 
 
 We can show the correlation matrix using Pearson's Correlation Index with:
@@ -1335,5 +1356,13 @@ dss['top_topic'] = dss[['topic_0','topic_1','topic_2']].idxmax(axis=1)
 ```
 
 
+### Cumulative Sum of a Column
 
+Given a column, we can build a cumulative sum of the column by using:
 
+```python
+ds['cum_sum'] = ds.columnname.cumsum()
+ds['cum_perc'] = 100*ds.cum_sum/ds.columnname.sum()
+
+ds.cum_perc.plot() # plots the cumulative distribution
+```
