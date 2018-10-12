@@ -129,8 +129,10 @@ ds = pd.read_csv(data, usecols=['foo', 'bar'], skipinitialspace=True)[['bar', 'f
 we can also refer to columns numerically, for example:
 
 ```python
-ds = pd.read_csv(data, usecols=[0,1])
+ds = pd.read_csv(data, usecols=[0,1], comment='#')
 ```
+In this last case we also specified that lines starting with "#" have to be
+considered comments, hence not to be analyzed.
 
 Let's see another example, in this case we have fields separated by a bunch of
 spaces, but still spaces can appear in some of the fields because there are
@@ -361,8 +363,17 @@ df.column_name_cat.sort_values(ascending = False)
 
 ### Create Dummy Columns for One-Hot Encoding
 
-```python 
+```python
 one_hot_cols = pd.get_dummies(ds['outcome'], prefix='outcome')
+ds.drop('outcome', axis=1, inplace = True)
+ds = ds.join(one_hot_cols)
+```
+
+### Create Dummy Columns for Dummy Encoding
+
+
+```python
+one_hot_cols = pd.get_dummies(ds['outcome'], prefix='outcome', drop_first=True)
 ds.drop('outcome', axis=1, inplace = True)
 ds = ds.join(one_hot_cols)
 ```
@@ -527,7 +538,7 @@ We can remove rows, for example in order to remove header and footer information
 from a dataset we can do:
 
 ```python
-$1 = $1[8:246]
+ds = ds[8:246]
 ```
 this will take from the 8th row to the 245th row of the dataset.
 
@@ -668,6 +679,22 @@ Another way to sort a dataset by the value of a column inplace is:
 ```python
 df.sort('rank',inplace=True)
 ```
+
+## Comparing Values
+
+We can check if two series or dataframe are equal, i.e., they have the same
+values with:
+
+```python
+assert ds['columnname'].equals(ds2['anothercolumn'])
+```
+
+Another example using dataframes instead of series may be:
+
+```python
+ds.equals(ds2)
+```
+
 
 ## Grouping Values
 Let's say we have a dataset which tells us various characteristics for neighbourhoods
@@ -844,6 +871,30 @@ function:
 # Here we change an integer column to a timedelta in hours.
 ds['time_offset_col'] = ds.time_offset_col.apply(lambda x: pd.Timedelta(hours=x))
 ```
+
+Let's see another example where we want to pass to the function called in apply
+more arguments, this can be done using lambdas like this:
+
+```python
+def apply_labeling(x, time, other_time):  
+    if (x['intertime_s'] >= time and x['intertime_s2'] >= other_time):
+        return 300
+    else:
+        return 100
+
+ds['new_label'] = ds.apply(lambda x : apply_labeling(x, 300, 500), axis=1)
+```
+
+### Operations to perform on Groups
+
+On dataframes where we used groupby we can generally perform different
+operations, let's see some examples:
+
+* if we want to get a single value for each group - use `aggregate()`
+* if we want to get a subset of the input rows - use `filter()`
+* if we want to get a new value for each input row - use `transform()`
+
+
 
 ## Cross Tab
 The main purpose of a cross-tabulation is to enable readers to readily compare two categorical variables:
@@ -1095,6 +1146,16 @@ If time series is non-random then one or more of the autocorrelations will be si
 The horizontal lines displayed in the plot correspond to 95% and 99% confidence bands. 
 The dashed line is 99% confidence band.
 
+### Decorating Plots
+
+We can add lines to indicate points or regions with:
+```python
+# draws a vertical line 
+plt.axvline(0.2, color='r')
+# draws an horizontal line
+plt.axhline(0.5, color='b')
+```
+
 ### Visualizing Unstructured Data
 In order to visualize unstructured data (e.g., audio, immages, text, ...), we can 
 make use of common packages generally used along with pandas.
@@ -1345,6 +1406,13 @@ do:
 
 ```python
 ds['difference_in_hours'] = (ds['published_time'] - ds.index).astype('timedelta64[h]')
+```
+
+If we have a timedelta and just want to convert it into an integer number of seconds,
+we can do:
+
+```python
+df['duration_seconds'] = df['duration'] / np.timedelta64(1, 's')
 ```
 
 
