@@ -90,7 +90,18 @@ ds.field.quantile(quantiles_lst)
 ```
 
 
-## Manipulating CSV Files
+## Manipulating Files
+
+Pandas support different kinds of files, some good rules of thumb when reading files are:
+
+* Specify which are the quotechars, that is, if the separator is a space, but
+space can appear in some of the fields delimited by the '"' characters, then
+the '"' character is our quotechar
+* Specify possible escape characters, if inside some of the fields characters are escaped,
+remember to specify this in the "escapechar" parameter
+* Specify dtypes through the "dtype" named parameter in order to achieve some speed up
+due to the fact that inferring a type takes time
+
 
 ### Reading a CSV File
 
@@ -157,7 +168,7 @@ df = pd.read_csv("file.csv", sep="[;,]", engine='python')
 ```
 
 ```python
-ds = pd.read_csv("original_datasets/newaa", engine='python', quotechar='!', header=None, names=['time','offset','title','link'], index_col='time')
+ds = pd.read_csv("dataset.csv", engine='python', quotechar='!', header=None, names=['time','offset','title','link'], index_col='time')
 ```
 
 
@@ -165,6 +176,38 @@ ds = pd.read_csv("original_datasets/newaa", engine='python', quotechar='!', head
 
 ```python
 energy = pd.read_excel("Energy Indicators.xls")
+```
+
+#### Reading a Complex file
+
+Sometimes, specifying delimiters and quotechars is not enough, we also need to
+specify how characters are escaped, for example in apache web logs, 
+is not so uncommon to find escaped characters inside strings, for example things like:
+
+```text
+5.5.5.5 - - [03/Feb/2018:00:59:13 +0200] "GET /path/strnage\"path HTTP/1.1" 503 245520 "-" "Chrome\"Strange\"UA"
+```
+a string like this, can definitely confuse the parser, we should in these cases parse it like:
+
+```python
+ds = pd.read_csv("access.1.log", escapechar="\\", quotechar='"', header=None)
+```
+
+Other times, it may be still more complex, and it can be a good idea to take
+advantage of regexes in order to parse a file, like this:
+
+```python
+logs = pd.DataFrame(columns=['time', 'article_id', 'user_id'])
+# regc = re.compile(r'\[(?P<time>.*?)\] "GET (.*?=)(?P<article_id>\d+)(&.*?=)(?P<user_id>\d+)')
+# alternative regexp that might be more efficient
+regc = re.compile(r'\[(?P<time>.+)\] "GET (?:.+article_id=)(?P<article_id>\d+)(?:&user_id=)(?P<user_id>\d+)')
+
+for line in log_file:
+    m = regc.match(line)
+    time = m.group('time')
+    article_id = m.group('article_id')
+    user_id = m.group('user_id')
+    logs.append([time, article_id, user_id])
 ```
 
 ### Writing to a CSV File
@@ -270,6 +313,7 @@ df['logic'] = np.where(df['AAA'] > 5,'high','low'); df
 ## Column Operations
 
 ### Remove columns
+
 ```python 
 ds.drop(['column1','column2'], 1, inplace = True)
 ```
@@ -279,6 +323,7 @@ del crime['column1']
 ```
 
 ### Remove Column on a Condition
+
 ```python 
 c = c[c.n_opts != 5]
 ```
@@ -287,6 +332,26 @@ c = c[c.n_opts != 5]
 ```python
 ds.rename(columns={'fcast_date_a': 'date_fcast'}, inplace=True)
 ```
+
+### Moving Columns
+
+Sometimes we want to change the ordering of columns, this can be useful
+especially in visualization or manual inspection contexts, in order to change
+column order, we can simply grab the column names as a list and then apply
+whatever operation on the list and put it back on our dataframe.
+Let's see an example, where we want to put the column called "session_id" as our
+first column, we can do:
+
+```python
+cols = list(ds) # we can also grab the column names list with ds.columns.tolist()
+# here we insert the "session_id" column in the zeroth position, that is
+# the first element
+cols.insert(0, cols.pop(cols.index('session_id')))
+
+# now we overwrite our dataframe
+ds = ds[cols]
+```
+
 
 ### Create new Columns
 
@@ -409,6 +474,7 @@ So the bin numbers are exclusive.
 
 
 ### Create a Dataframe as a combination of two dataframes with different columns
+
  The main purpose of a cross-tabulation is to enable readers to readily compare two categorical variables.
 
 ```python 
