@@ -699,7 +699,27 @@ In order to view all the duplicates we can do:
 ds.loc[users.duplicated(keep = 'last'), :]
 ```
 where keep = 'last' means that we are showing the last encountered 
-instance of a duplicate row
+instance of a duplicate row.
+
+### Enumerating Dataset Duplicates
+
+Given the subset of duplicated rows extracted by doing:
+
+```python
+ds = ds.loc[users.duplicated(keep = 'last'), :]
+```
+We can count how many those are repeated with:
+
+```python
+dfanalysis = ds.groupby(['ColA','ColB']).size().reset_index(name='count')
+# we can also use groupy(list(df)) if we want to use all the columns
+```
+
+we can order results in a descending way by doing:
+
+```python
+dfanalysis.sort_values(by="count", ascending=False).to_csv("duplicated_count_stats.csv", index=False)
+```
 
 ### Removing Duplicates
 
