@@ -1484,6 +1484,14 @@ date_mask = (ds_utc.index >= "2015-01-01") & (ds_utc.index < "2017-01-01")
 ds_utc_2y = ds_utc[date_mask]
 ```
 
+Notice that if our time series has the timestamp/date as index we can also use
+the function "slice" to perform a filter, such as:
+
+```sh
+period = slice('2017-07-17 00:00:00','2018-07-16 23:59:00')
+ds.loc[period]
+```
+
 
 ### Time Series Common Tasks: Converting time in different units
 
