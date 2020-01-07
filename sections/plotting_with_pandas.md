@@ -163,6 +163,39 @@ plt.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
 plt.show()
 ```
 
+Let's see another example of bar plot which also utilizes custom colors
+for the stacked bar plot.  In addition we define the order in which the
+X-axis values must be shown, since this cannot be automatically inferred
+when we have a categorical variable on the X-axis.
+
+In this case we want to plot a stacked bar chart of vulnerability severity for protocols.
+On the X-axis we have a severity level (either LOW, MEDIUM or HIGH) and on the Y-Axis
+we have the number of vulnerabilities where each protocol is assigned a different color.
+```python
+stacked_data = cves.groupby(['cvss2_severity', 'protocol'])['cvss2_severity'].count().unstack('protocol').fillna(0)
+
+severity_order = ["LOW", "MEDIUM", "HIGH"]
+
+# Definition of Custom Colors for Protocols
+mqtt_color = '#9AFF99'
+coap_color = '#FFFC9E'
+amqp_color = '#FFCE93'
+dds_color  = '#FD6864'
+xmpp_color = '#FFCCC9'
+mdns_color = '#808000'
+ssdp_color = '#123456'
+
+
+f = plt.figure()
+stacked_data.loc[severity_order].plot(kind='bar', stacked=True,
+                  ax=f.gca(),
+                  color=[mqtt_color,coap_color,amqp_color,dds_color,
+                         xmpp_color,mdns_color,ssdp_color])
+
+plt.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
+plt.show()
+```
+
 
 
 ## Combination of more plots
