@@ -136,6 +136,35 @@ df.plot.box(color=color, sym='r+')
 ds.column_name.plot(kind = 'bar')
 ```
 
+We can also build stacked bar plot by using the parameter `stacked=True`.
+
+Let's take an example to show how to build stacked bar plots.
+
+Let's say we have a database of vulnerabilities with many fields, among
+these fields we have `year_published` tracking the year a certain CVE
+was released, and `protocol` tracking the protocol the CVE affects.
+
+We can plot the number of CVEs by year using for each year a different
+color representing a different protocol.
+In order to do this we can do:
+```python
+stacked_data = cves.groupby(['year_published', 'protocol'])['year_published'].count().unstack('protocol').fillna(0)
+
+# We create the handle of the figure to be able to move the legend of the plot
+fig = plt.figure()
+
+# build the stacked plot
+stacked_data.plot(kind='bar', stacked=True, ax=fig.gca())
+
+# we want to put the legend outside the plot
+plt.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
+
+# show the plot
+plt.show()
+```
+
+
+
 ## Combination of more plots
 
 ```python
