@@ -197,6 +197,41 @@ plt.show()
 ```
 
 
+Let's see againn another example of plot where we customize more
+options, like:
+- increase the DPIs of the image
+- reverse the legend order
+- plot relative bar chart wrt rows
+
+```python
+stacked_data = cves.groupby(['protocol', 'cvss2_severity'])['protocol'].count().unstack('cvss2_severity').fillna(0)
+
+protocol_order = ["mqtt", "coap", "amqp", "dds", "xmpp", "mdns", "ssdp"]
+
+
+stacked_data_perc = stacked_data.div(stacked_data.sum(axis=1), axis=0)
+
+
+
+# Set Figure DPIs for enhanced quality and size
+f = plt.figure(dpi=120)
+
+ax = stacked_data_perc.loc[protocol_order][['LOW','MEDIUM','HIGH']].plot(kind='bar', stacked=True,
+                  ax=f.gca(),)
+ax.set_xticklabels(["MQTT","CoAP","AMQP","DDS","XMPP","mDNS","SSDP"])
+
+# Set Axis Labels
+ax.set_xlabel("Protocol")
+ax.set_ylabel("Percentage")
+
+handles, labels = ax.get_legend_handles_labels()
+# We are reversing the order of the legend in this way, to have 'LOW' in 
+# the bottom part and 'HIGH' in the higher part
+plt.legend(reversed(handles), reversed(labels), loc='center left', bbox_to_anchor=(1.0, 0.5))
+plt.show()
+```
+
+
 
 ## Combination of more plots
 
