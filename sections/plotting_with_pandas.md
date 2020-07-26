@@ -197,7 +197,7 @@ plt.show()
 ```
 
 
-Let's see againn another example of plot where we customize more
+Let's see again another example of plot where we customize more
 options, like:
 - increase the DPIs of the image
 - reverse the legend order
@@ -217,7 +217,7 @@ stacked_data_perc = stacked_data.div(stacked_data.sum(axis=1), axis=0)
 f = plt.figure(dpi=120)
 
 ax = stacked_data_perc.loc[protocol_order][['LOW','MEDIUM','HIGH']].plot(kind='bar', stacked=True,
-                  ax=f.gca(),)
+                  ax=f.gca())
 ax.set_xticklabels(["MQTT","CoAP","AMQP","DDS","XMPP","mDNS","SSDP"])
 
 # Set Axis Labels
