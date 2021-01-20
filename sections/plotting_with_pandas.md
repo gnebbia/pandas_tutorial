@@ -1,3 +1,5 @@
+# Plotting with pandas
+
 Let's see some plotting which is generally done with pandas,
 when I have to do plots I prefer to generally do:
 ```python
@@ -106,7 +108,7 @@ it is also termed the Parzen–Rosenblatt window method.
 
 
 ```python
-df.col1.plot(kind='kde')
+df.col2.plot(kind='kde')
 ```
 
 ## Box Plots
