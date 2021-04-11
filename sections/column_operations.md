@@ -162,7 +162,7 @@ So the bin numbers are exclusive.
 
 ## Create a Dataframe as a combination of two dataframes with different columns
 
- The main purpose of a cross-tabulation is to enable readers to readily compare two categorical variables.
+The main purpose of a cross-tabulation is to enable readers to readily compare two categorical variables.
 
 ```python
 ds = pd.concat([df_even, df_odd], axis=1)
