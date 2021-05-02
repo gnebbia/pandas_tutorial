@@ -70,4 +70,5 @@ plt.plot(3, 2) # This makes a plot with a center in 3 on x axis and 2 on y axis
 
 plt.plot(3, 2, '.') # this will plot a point in the middle of the plot
 
+```
 
